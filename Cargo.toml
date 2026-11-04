@@ -53,6 +53,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 proptest = "1"
 criterion = "0.5"
 tempfile = "3"
+pollster = "0.4"
 
 [profile.release]
 lto = false
