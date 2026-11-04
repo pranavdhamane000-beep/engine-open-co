@@ -1,0 +1,9 @@
+# Build artifacts live OUTSIDE OneDrive (see DECISIONS.md D-04)
+# absolute machine-local path is intentional for this workstation
+[target-dir]
+# set via .cargo/config.toml below
+
+*.bak
+*.tmp
+*.log
+recovery/

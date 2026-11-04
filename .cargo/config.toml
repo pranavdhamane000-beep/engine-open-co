@@ -1,0 +1,7 @@
+# Build cache must not live inside OneDrive (multi-GB, thousands of files).
+# Machine-local absolute path; see ROADMAP.md "Build hygiene" + DECISIONS.md D-04.
+[build]
+target-dir = "C:\\Users\\Pranav\\AppData\\Local\\anim_engine_target"
+
+[alias]
+t = "test --workspace"

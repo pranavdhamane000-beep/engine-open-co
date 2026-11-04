@@ -1,0 +1,18 @@
+# Decision Log — Animation Engine Program
+
+_Devery decision recorded AT THE MOMENT it is made. Append-only. Newest at bottom.
+If chat context is ever lost, this file + ROADMAP.md + STATUS.md reconstruct everything._
+
+| # | Date | Decision | Context | Consequence |
+|---|---|---|---|---|
+| D-01 | 2026-11-04 | The DES v3.2 document (`2D 2.5D Animation Engine Development Execution Specification v3.2.docx`) is the NORMATIVE execution spec for the engine | User delivered the document; assistant confirmed build capability twice; user then pushed for a phased plan | All work packages (WP00–WP22), gates, and ADR requirements follow the spec verbatim. Deviations require an ADR entry |
+| D-02 | 2026-11-04 | Program divided into **5 phases** (user's own proposal, refined by assistant into the phase table) | User: "what if entire system divide in 4-5 phases to build?" | Phase boundaries = hard checkpoints; no phase starts without user approval of previous phase's exit gate |
+| D-03 | 2026-11-04 | All decisions/status/completion details persist in markdown files inside the repo (DECISIONS.md, STATUS.md, ROADMAP.md, docs/journal/) | User: "all the decisions status what completed all details you can store in markdown file to prevent forgetting" | Chat context is NEVER load-bearing; files are reconstructable truth |
+| D-04 | 2026-11-04 | Rust build cache (`target/`) will be redirected OUT of OneDrive (user-local app-data path) via `CARGO_TARGET_DIR` or `.cargo/config.toml`; sources STAY in OneDrive | OneDrive sync of multi-GB `target/` would throttle the machine | Recorded at Phase 0 setup; verify after first `cargo build` |
+| D-05 | 2026-11-04 | Engine repo location: `youtube_research/Fight animation/animation_engine/` | User created `Fight animation/` workspace for all fight-animation work | All fight-animation assets (Python MVP, renders, samples) already there |
+| D-06 | 2026-11-04 | Spec §2.1 "engine must remain fully usable without an AI model/LLM" is ACCEPTED — the LLM "director" (match_director.py, future) stays strictly OUTSIDE the engine as an automation/tooling layer | Keeps architecture boundary clean per spec | No LLM dependencies in any engine crate, ever |
+| D-07 | 2026-11-04 | ROADMAP.md phase table (5 phases with per-phase user checkpoints and exit proofs) is now the agreed slice plan; STATUS.md gate log tracks every pass/fail with evidence | User approved phasing concept; files written same session | Phase starts require user approval of prior exit gate |
+| D-08 | 2026-11-04 | Rust toolchain: stable v1.99.1, MSVC host, minimal profile, using pre-existing VS Build Tools 18 at `Program Files (x86)\Microsoft Visual Studio\18\BuildTools` | vswhere confirmed VC.Tools.x86.x64 present before install | No Vulkan SDK needed (wgpu uses DX12 backend on Windows); toolchain upgrades later are gated changes per spec §5.1 |
+| D-09 | 2026-11-04 | Build-cache target dir = `C:\Users\Pranav\AppData\Local\anim_engine_target`, enforced via committed `.cargo/config.toml` (absolute, machine-local) | OneDrive sync bloat prevention verified with hello-crate compile | Portable config note: on other machines override locally, do not change the committed default blindly |
+
+<!-- Append new decisions below this line -->
