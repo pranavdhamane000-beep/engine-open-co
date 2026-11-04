@@ -93,8 +93,8 @@ use_small_heuristics = "Max"
 CONFIG_TOML = """# Non-secret application defaults and explicit external-tool settings (spec 9.3).
 [ffmpeg]
 # Absolute paths REQUIRED for production export (spec 5.1); no PATH discovery.
-ffmpeg_local = "C:\\\\ffmpeg\\\\bin\\\\ffmpeg.exe"
-ffprobe_local = "C:\\\\ffmpeg\\\\bin\\\\ffprobe.exe"
+ffmpeg_local = "D:\\\\ffmp\\\\ffmpeg-9.0.2-essentials_build\\\\bin\\\\ffmpeg.exe"
+ffprobe_local = "D:\\\\ffmp\\\\ffmpeg-9.0.2-essentials_build\\\\bin\\\\ffprobe.exe"
 """
 
 (root / "Cargo.toml").write_text(WORKSPACE_TOML, encoding="utf-8")
