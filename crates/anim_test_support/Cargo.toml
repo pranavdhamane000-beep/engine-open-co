@@ -11,4 +11,6 @@ bytemuck.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 pollster.workspace = true
+ash.workspace = true
+windows.workspace = true
 tempfile.workspace = true

@@ -4,3 +4,5 @@
 //! production behavior (spec 9.3). Behavior lands per work package.
 #![deny(clippy::all)]
 #![allow(clippy::multiple_crate_versions)] // wgpu/egui ecosystem transitive dup minors; revisit WP11
+
+pub mod probe;

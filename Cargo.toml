@@ -26,6 +26,8 @@ publish = false
 # Versions recorded per spec 5.1; each becomes referenced when its WP lands.
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+ash = "0.38"
+windows = { version = "0.62", features = ["Win32_Graphics_Dxgi", "Win32_Graphics_Dxgi_Common"] }
 thiserror = "2"
 anyhow = "1"
 uuid = { version = "1", features = ["v4", "serde"] }
@@ -42,7 +44,6 @@ winit = "0.30"
 egui = "0.33"
 egui-dock = "0.18"
 egui-winit = { version = "0.33", default-features = false }
-windows = { version = "0.62", features = [] }
 symphonia = { version = "0.5", features = ["wav", "ogg", "flac"] }
 rubato = "0.16"
 hound = "3.5"
