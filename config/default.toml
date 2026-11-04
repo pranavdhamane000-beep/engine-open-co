@@ -1,0 +1,5 @@
+# Non-secret application defaults and explicit external-tool settings (spec 9.3).
+[ffmpeg]
+# Absolute paths REQUIRED for production export (spec 5.1); no PATH discovery.
+ffmpeg_local = "C:\\ffmpeg\\bin\\ffmpeg.exe"
+ffprobe_local = "C:\\ffmpeg\\bin\\ffprobe.exe"
