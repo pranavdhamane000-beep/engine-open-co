@@ -48,3 +48,16 @@ another backend (§9.11).
   §9.12 G0: reports are invalid for a different adapter/driver).
 - Probe binaries stay in `anim_test_support`; no production crate may import
   them (spec §9.10).
+
+---
+
+## Amendment 1 (2026-11-05, decision D-11)
+
+The discrete-GPU-first ranking demonstrated in `wp00_gpu.rs` was **probe
+evidence only — it is NOT engine runtime policy**. Per user decision
+D-11, the engine runtime performs **no automatic adapter ranking or
+selection**: at animation-system startup the engine prints a plain
+reminder listing detected GPUs by name and telling the user to make sure
+the discrete GPU is the active one. The user remains the decision-maker.
+Startup enumeration is display-only (adapter names); it never requests a
+device and never reorders by device type.
