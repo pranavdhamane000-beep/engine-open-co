@@ -4,13 +4,14 @@ _Source of truth for "where we are". Updated at the END of every work step._
 
 ---
 
-## Snapshot (updated: 2026-11-04, end of WP00)
+## Snapshot (updated: 2026-11-05, end of WP01)
 
 | Item | State |
 |---|---|
-| Current phase | **WP00 COMPLETE (except deferred pen, D-10) — Phase 1.2 (WP01) starts next** |
+| Current phase | **WP01 COMPLETE — Phase 1.3 (WP02: immutable assets + content manifest) starts next** |
 | WP00 probes | ✅ GPU, ✅ adapter, ✅ media, ✅ export, ✅ replace — 🔒 pen deferred to Phase 4 |
-| ADRs | 0001 workspace/toolchain · 0002 GPU backend · 0003 adapter LUID/budget · 0004 media/export/replace |
+| WP01 core types | ✅ Rational / FrameRate / FramePos / FrameRange / SampleInterval / IDs / Revision / Canonical hashing / atomic write |
+| ADRs | 0001 workspace/toolchain · 0002 GPU · 0003 adapter LUID/budget · 0004 media/export/replace · **0005 WP01 encoding decisions** |
 | Toolchain | 1.99.1 pinned; `Cargo.lock` frozen (spec §9.5 step 10 satisfied) |
 
 ## Next actions (in order)
@@ -19,8 +20,10 @@ _Source of truth for "where we are". Updated at the END of every work step._
 3. ~~WP00 adapter probe (LUID correlation + budget)~~ ✅ (2026-11-04, PASS — ADR-0003)
 4. **WP00 pen probe DEFERRED to Phase 4 by decision D-10** (user directive)
 5. ~~WP00 automated probes: media → export → replace~~ ✅ (2026-11-04, all PASS — ADR-0004)
-6. **Phase 1.2 (WP01): rational time — user directive to proceed immediately**
-7. Reminder: pen probe must complete before Phase 4 editor gates (D-10)
+6. ~~Phase 1.2 (WP01): canonical rational time + stable identity~~ ✅ (2026-11-05, PASS — ADR-0005)
+7. **Phase 1.3 (WP02): immutable assets + content manifest** — next checkpointed step
+8. Phase 1 closing demo after WP01+ ground crates: save project → hash → reopen → hash identical
+9. Reminder: pen probe must complete before Phase 4 editor gates (D-10)
 
 ## Gate log
 | Gate | Result | Date | Evidence |
@@ -34,6 +37,7 @@ _Source of truth for "where we are". Updated at the END of every work step._
 | WP00 export probe | ✅ PASS | 2026-11-04 | `artifacts/probe/wp00_export_report.json`: raw RGB → libx264rgb -qp 0 → mkv; byte-identical 16-frame decode; 1 video + 1 audio stream; audio 44,100 exact. KEY FINDING: plain libx264 silently converts RGB→YUV420 (ADR-0004) |
 | WP00 replace probe | ✅ PASS | 2026-11-04 | `artifacts/probe/wp00_replace_report.json`: fault-before commit keeps old bytes (blake3), commit swaps complete new, backup holds complete old; same-volume temp files; WP01 implements via ReplaceFileW (ADR-0004) |
 | WP00 gate G0 | ✅ RECORD | 2026-11-04 | 5/6 probes PASS; pen deferred by DECISION D-10; toolchain + Cargo.lock frozen |
+| WP01 — canonical rational time | ✅ PASS | 2026-11-05 | fmt=0 / clippy -D warnings=0 / test --workspace --locked=0; 32 tests (13 unit + 19 validation). 10,001 adjacent frames at 24000/1001 & 30000/1001 (48k and 44.1k) sample-partitioned with zero drift against BigInt reference; negative exact boundaries floor correctly; NTSC as exact rationals; UUID/Revision/canonical-bytes pinned; ReplaceFileW write-path live in `anim_core::io` (ADR-0005) |
 
 ## Session journal
 | Session | Date | What happened |
@@ -44,3 +48,4 @@ _Source of truth for "where we are". Updated at the END of every work step._
 | Phase 1 GPU probe | 2026-11-04 | `wp00_gpu.rs` written and PASSED on real hardware: wgpu 27.0.1 activated (first build 1m36s cached); Vulkan backend on RTX 3050 A, WGSL dispatch → byte-exact readback, RGBA16F attachment verified; findings recorded in ADR-0001 (workspace/toolchain) + ADR-0002 (backend/adapter rule); machine report in artifacts/probe/wp00_gpu_report.json |
 | Phase 1 adapter probe | 2026-11-04 | `wp00_adapter.rs` + shared `probe.rs` PASSED (exit 0): ash 0.38 (same version as wgpu-hal); discovery — NVIDIA/Intel ICDs only fill deviceLUID when external-memory capability exts are active + API 1.3; correlated both Vulkan devices to DXGI by exact 64-bit LUID + vendor/device cross-check; budget = 3.23 GiB of the 4 GB card; negative-path test proves no substitution. ADR-0003 records the load-bearing machine fact |
 | Phase 1 media/export/replace probes | 2026-11-04 | Three automated probes PASSED in one run: (media) ffmpeg at real path D:\ffmp, ffprobe numeric-string lesson, decode tolerances declared, locked rubato config; (export) byte-exact lossless RGB via libx264rgb, stream counts exact, YUV420-conversion trap caught; (replace) ReplaceFileW fault/commit/backup semantics hash-verified. ADR-0004 written; G0 recorded 5/6 + pen deferred (D-10). Config default.toml corrected to real ffmpeg paths |
+| Phase 1.2 WP01 | 2026-11-05 | All of `anim_core` implemented per spec §10: error.rs (7 variants incl. message-only Io), rational.rs (i128 + BigInt-reduced arithmetic via `from_bigints`, floor/ceil checked), time.rs (FrameRate with call-site validation for struct-literal bypass, FramePos carry-normalize + strict canonical deserialize, frame_samples BigInt exact, sample_at), id.rs (7 typed UUID wrappers, bare-UUID Display/FromStr round trip, Revision checked), hash.rs (length-framed domain blake3 + Canonical for primitives/Rational/ids/ranges), io/ (atomic write: temp→sync→ReplaceFileW→reopen-verify). Validation: 10,001-frame partition at both NTSC rates + 44.1k zero-drift vs BigInt reference; 5 proptests × 512 cases; 32 tests total; gates fmt/clippy/test all 0. ADR-0005 records encoding decisions; proptest macro quirk learned (needs `#[test]` attr inside; no path invocation) |

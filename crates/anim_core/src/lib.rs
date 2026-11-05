@@ -1,6 +1,24 @@
-//! anim_core - Controlled exports for time, IDs, errors, canonical hashing and atomic file replacement (spec 4.2)
+//! WP01 — Canonical rational time and stable identity (spec §10).
 //!
-//! WP00 scaffold state: compilable empty library root with NO placeholder
-//! production behavior (spec 9.3). Behavior lands per work package.
-#![deny(clippy::all)]
-#![allow(clippy::multiple_crate_versions)] // wgpu/egui ecosystem transitive dup minors; revisit WP11
+//! The one time model for project serialization, keyframes, events, frame
+//! ranges, audio samples and simulation scheduling, plus persistent typed
+//! IDs. NTSC rates are rationals, never decimal approximations.
+//!
+//! Error handling contract (spec 10.11): never clamp invalid user data,
+//! never silently round a decimal NTSC rate, never panic on arithmetic,
+//! never wrap a revision.
+
+pub mod error;
+pub mod hash;
+pub mod id;
+pub mod io;
+pub mod rational;
+pub mod time;
+
+pub use error::CoreError;
+pub use hash::{domain_hash, domain_hash_hex, Canonical};
+pub use id::{
+    AssetId, CommandId, EventDefinitionId, NodeId, ProjectId, Revision, SceneId, TrackId,
+};
+pub use rational::Rational;
+pub use time::{FramePos, FrameRange, FrameRate, SampleInterval};
