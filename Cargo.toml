@@ -45,6 +45,7 @@ egui = "0.33"
 egui-dock = "0.18"
 egui-winit = { version = "0.33", default-features = false }
 symphonia = { version = "0.5", features = ["wav", "ogg", "flac", "vorbis"] }
+image = { version = "0.25", default-features = false, features = ["png"] }
 rubato = "0.16"
 hound = "3.5"
 cpal = "0.16"

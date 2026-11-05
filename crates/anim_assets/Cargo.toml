@@ -6,3 +6,19 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
+anim_core = { path = "../anim_core" }
+blake3.workspace = true
+hex.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+uuid.workspace = true
+image.workspace = true
+symphonia.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+# rename-without-overwrite commit (spec 11.7: nonoverwriting rename)
+windows.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+hound.workspace = true

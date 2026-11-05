@@ -4,14 +4,15 @@ _Source of truth for "where we are". Updated at the END of every work step._
 
 ---
 
-## Snapshot (updated: 2026-11-05, end of WP01)
+## Snapshot (updated: 2026-11-05, end of WP02)
 
 | Item | State |
 |---|---|
-| Current phase | **WP01 COMPLETE — Phase 1.3 (WP02: immutable assets + content manifest) starts next** |
+| Current phase | **WP02 COMPLETE — Phase 1.4 (WP03: commands, undo, atomic project persistence) starts next** |
 | WP00 probes | ✅ GPU, ✅ adapter, ✅ media, ✅ export, ✅ replace — 🔒 pen deferred to Phase 4 |
 | WP01 core types | ✅ Rational / FrameRate / FramePos / FrameRange / SampleInterval / IDs / Revision / Canonical hashing / atomic write |
-| ADRs | 0001 workspace/toolchain · 0002 GPU · 0003 adapter LUID/budget · 0004 media/export/replace · **0005 WP01 encoding decisions** |
+| WP02 asset layer | ✅ ContentHash / streaming BLAKE3 / AssetManifest + domain digest / AssetStore / transactional import / resolver+verified / PNG+WAV decoders |
+| ADRs | 0001 workspace/toolchain · 0002 GPU · 0003 adapter LUID/budget · 0004 media/export/replace · 0005 WP01 encoding · **0006 WP02 assets/manifest** |
 | Toolchain | 1.99.1 pinned; `Cargo.lock` frozen (spec §9.5 step 10 satisfied) |
 
 ## Next actions (in order)
@@ -21,9 +22,10 @@ _Source of truth for "where we are". Updated at the END of every work step._
 4. **WP00 pen probe DEFERRED to Phase 4 by decision D-10** (user directive)
 5. ~~WP00 automated probes: media → export → replace~~ ✅ (2026-11-04, all PASS — ADR-0004)
 6. ~~Phase 1.2 (WP01): canonical rational time + stable identity~~ ✅ (2026-11-05, PASS — ADR-0005)
-7. **Phase 1.3 (WP02): immutable assets + content manifest** — next checkpointed step
-8. Phase 1 closing demo after WP01+ ground crates: save project → hash → reopen → hash identical
-9. Reminder: pen probe must complete before Phase 4 editor gates (D-10)
+7. ~~Phase 1.3 (WP02): immutable assets + content manifest~~ ✅ (2026-11-05, PASS — ADR-0006)
+8. **Phase 1.4 (WP03): commands, undo, atomic project persistence (spec §12)** — next checkpointed step; Command::UpsertAsset connects WP02 manifest records to the command system
+9. Phase 1 closing demo after WP02 ground crates: save project → hash → reopen → hash identical (Phase 1 exit target)
+10. Reminder: pen probe must complete before Phase 4 editor gates (D-10); WP06 add-on noted: device-lost → typed error + clean re-init
 
 ## Gate log
 | Gate | Result | Date | Evidence |
@@ -38,6 +40,7 @@ _Source of truth for "where we are". Updated at the END of every work step._
 | WP00 replace probe | ✅ PASS | 2026-11-04 | `artifacts/probe/wp00_replace_report.json`: fault-before commit keeps old bytes (blake3), commit swaps complete new, backup holds complete old; same-volume temp files; WP01 implements via ReplaceFileW (ADR-0004) |
 | WP00 gate G0 | ✅ RECORD | 2026-11-04 | 5/6 probes PASS; pen deferred by DECISION D-10; toolchain + Cargo.lock frozen |
 | WP01 — canonical rational time | ✅ PASS | 2026-11-05 | fmt=0 / clippy -D warnings=0 / test --workspace --locked=0; 32 tests (13 unit + 19 validation). 10,001 adjacent frames at 24000/1001 & 30000/1001 (48k and 44.1k) sample-partitioned with zero drift against BigInt reference; negative exact boundaries floor correctly; NTSC as exact rationals; UUID/Revision/canonical-bytes pinned; ReplaceFileW write-path live in `anim_core::io` (ADR-0005) |
+| WP02 — immutable assets + content manifest | ✅ PASS | 2026-11-05 | fmt=0 / clippy -D warnings=0 / test --workspace --locked=0; anim_assets = 9 modules + 18 validation tests (§11.12). Streaming BLAKE3 (1 MiB trickle @ 4 KiB reads vs 64 KiB buffer = hash-equal, published empty vector pinned); content-addressed `<root>/assets/objects/<2>/<2>/<hash>` confinement test; transactional import staging→sync→MoveFileExW-no-overwrite→dedup-verify; failure-before-rename leaves prior objects intact + staging clean; digest deterministic under shuffled insertion; DependencyCycle (self + A→B→A); typed resolve errors (MissingAssetId vs MissingObject); PNG RGBA-8 + IHDR-alpha decode; WAV PCM-i16 decode; UnsupportedDecoder for unregistered (kind, version) (ADR-0006) |
 
 ## Session journal
 | Session | Date | What happened |
@@ -50,3 +53,4 @@ _Source of truth for "where we are". Updated at the END of every work step._
 | Phase 1 media/export/replace probes | 2026-11-04 | Three automated probes PASSED in one run: (media) ffmpeg at real path D:\ffmp, ffprobe numeric-string lesson, decode tolerances declared, locked rubato config; (export) byte-exact lossless RGB via libx264rgb, stream counts exact, YUV420-conversion trap caught; (replace) ReplaceFileW fault/commit/backup semantics hash-verified. ADR-0004 written; G0 recorded 5/6 + pen deferred (D-10). Config default.toml corrected to real ffmpeg paths |
 | Phase 1.2 WP01 | 2026-11-05 | All of `anim_core` implemented per spec §10: error.rs (7 variants incl. message-only Io), rational.rs (i128 + BigInt-reduced arithmetic via `from_bigints`, floor/ceil checked), time.rs (FrameRate with call-site validation for struct-literal bypass, FramePos carry-normalize + strict canonical deserialize, frame_samples BigInt exact, sample_at), id.rs (7 typed UUID wrappers, bare-UUID Display/FromStr round trip, Revision checked), hash.rs (length-framed domain blake3 + Canonical for primitives/Rational/ids/ranges), io/ (atomic write: temp→sync→ReplaceFileW→reopen-verify). Validation: 10,001-frame partition at both NTSC rates + 44.1k zero-drift vs BigInt reference; 5 proptests × 512 cases; 32 tests total; gates fmt/clippy/test all 0. ADR-0005 records encoding decisions; proptest macro quirk learned (needs `#[test]` attr inside; no path invocation) |
 | Phase 1 D-11 GPU startup reminder | 2026-11-05 | User directive: NO automatic GPU selection in engine runtime. Implemented `anim_app::main` startup reminder — display-only adapter listing (names, no device request, no reorder) + user guidance to set the dGPU active; user remains the decision-maker. WP00 probe ranking scoped to probe evidence only (ADR-0002 Amendment 1). Verified output on machine: 6 adapter entries listed (Intel ×3 backends, RTX ×2 backends, Basic Render Driver) — reminder printed, no selection. Gates fmt=0 clippy=0 test=0 |
+| Phase 1.3 WP02 | 2026-11-05 | All of `anim_assets` implemented per spec §11: hash.rs (ContentHash fixed-parse, StreamingHasher), manifest.rs (AssetKind/AssetManifestEntry sorted-deps no-dup, AssetManifest BTreeMap, insert idempotent + explicit replace, DFS cycle check, domain digest `anim_assets_manifest_v1`), store.rs (root-confined objects, verify = size then hash, `read_object`), import.rs (stream staging → flush+sync → parent dirs → MoveFileExW WITHOUT overwrite → dedup-verify-existing), resolver.rs (free `resolve`/`verify` per §11.9, verify_all stops at first failure, diagnostics = VERIFIED state), decode.rs (IMPORTER_VERSION=1 registry, derived_cache_key), image.rs (PNG→RGBA8 straight + IHDR color-type alpha), audio.rs (WAV→i16 via symphonia). Validation: 18 tests incl. published BLAKE3 empty vector (memorized tail initially WRONG, corrected from computed library value), duplicate-content dedup, same-ID reimport = new revision, corruption→HashMismatch, truncation→SizeMismatch, failure-before-rename keeps store intact, shuffled-insert digest determinism, dependency cycles, path confinement. Key bug caught by tests: parent dirs were not created before rename (0x80070003) — fixed per spec 11.7. Gates fmt=0 clippy=0 test=0; ADR-0006 records decisions (Decode variant added, MVP decoder coverage PNG+WAV, digest field order, diagnostics=verified) |
