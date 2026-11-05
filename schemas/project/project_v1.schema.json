@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "anim/project_v1",
+  "title": "Animation project document (schema v1)",
+  "description": "Authoritative project document (DES spec 12.8). serde/serde_json is the ENFORCING parser; this file is the shared external contract.",
+  "type": "object",
+  "required": ["schema_version", "project_id", "revision", "frame_rate", "assets", "scenes"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": 1 },
+    "project_id": { "type": "string", "format": "uuid" },
+    "revision": { "type": "integer", "minimum": 0 },
+    "frame_rate": { "type": "string", "pattern": "^[0-9]+/[1-9][0-9]*$" },
+    "assets": {
+      "type": "object",
+      "required": ["schema_version", "records"],
+      "properties": {
+        "schema_version": { "type": "integer", "minimum": 1 },
+        "records": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/assetManifestEntry" }
+        }
+      }
+    },
+    "scenes": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/sceneData" }
+    }
+  },
+  "definitions": {
+    "assetManifestEntry": {
+      "type": "object",
+      "required": ["asset_id", "content_hash", "byte_length", "kind", "importer_version", "dependencies", "display_name"],
+      "properties": {
+        "asset_id": { "type": "string", "format": "uuid" },
+        "content_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "byte_length": { "type": "integer", "minimum": 0 },
+        "kind": { "enum": ["Image", "Audio", "Font", "Vector", "Rig", "Other"] },
+        "importer_version": { "type": "integer", "minimum": 1 },
+        "dependencies": { "type": "array", "items": { "type": "string", "format": "uuid" } },
+        "display_name": { "type": "string" }
+      }
+    },
+    "sceneData": {
+      "type": "object",
+      "required": ["name", "nodes", "tracks", "markers"],
+      "properties": {
+        "name": { "type": "string" },
+        "nodes": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/nodeData" }
+        },
+        "tracks": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/trackData" }
+        },
+        "markers": { "type": "array", "items": { "$ref": "#/definitions/marker" } }
+      }
+    },
+    "nodeData": {
+      "type": "object",
+      "required": ["name", "parent", "asset", "properties"],
+      "properties": {
+        "name": { "type": "string" },
+        "parent": { "type": ["string", "null"], "format": "uuid" },
+        "asset": { "type": ["string", "null"], "format": "uuid" },
+        "properties": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/propertyTrack" }
+        }
+      }
+    },
+    "trackData": {
+      "type": "object",
+      "required": ["name", "target", "layer", "property"],
+      "properties": {
+        "name": { "type": "string" },
+        "target": { "type": "string", "format": "uuid" },
+        "layer": { "type": "integer", "minimum": 0 },
+        "property": { "type": "string", "minLength": 1 }
+      }
+    },
+    "marker": {
+      "type": "object",
+      "required": ["name", "at", "kind"],
+      "properties": {
+        "name": { "type": "string" },
+        "at": {
+          "type": "object",
+          "required": ["frame", "subframe"],
+          "properties": {
+            "frame": { "type": "integer" },
+            "subframe": { "type": "string", "pattern": "^[0-9]+/[1-9][0-9]*$" }
+          }
+        },
+        "kind": { "enum": ["Cut", "Note"] }
+      }
+    },
+    "propertyTrack": {
+      "type": "object",
+      "required": ["default", "keys"],
+      "properties": {
+        "default": { "$ref": "#/definitions/propertyValue" },
+        "keys": { "type": "array", "items": { "$ref": "#/definitions/propertyKey" } }
+      }
+    },
+    "propertyKey": {
+      "type": "object",
+      "required": ["time", "value", "easing"],
+      "properties": {
+        "time": { "type": "string", "pattern": "^-?[0-9]+/[1-9][0-9]*$" },
+        "value": { "$ref": "#/definitions/propertyValue" },
+        "easing": { "enum": ["Linear", "Step", "Smooth"] }
+      }
+    },
+    "propertyValue": {
+      "oneOf": [
+        { "type": "object", "required": ["Float"], "properties": { "Float": { "type": "number" } } },
+        { "type": "object", "required": ["Int"], "properties": { "Int": { "type": "integer" } } },
+        { "type": "object", "required": ["Bool"], "properties": { "Bool": { "type": "boolean" } } },
+        { "type": "object", "required": ["Text"], "properties": { "Text": { "type": "string" } } }
+      ]
+    }
+  }
+}

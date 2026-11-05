@@ -297,6 +297,51 @@ pub fn gcd_u32(a: u32, b: u32) -> u32 {
     }
 }
 
+impl Serialize for FrameRate {
+    /// Canonical text form "num/den" (unnormalized, exactly like Rational).
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        s.serialize_str(&format!("{}/{}", self.num, self.den))
+    }
+}
+
+impl<'de> Deserialize<'de> for FrameRate {
+    fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+        let s = String::deserialize(d)?;
+        let (num, den) = s.split_once('/').ok_or_else(|| {
+            serde::de::Error::custom(format!("invalid frame rate text: {s}"))
+        })?;
+        FrameRate::new(
+            num.parse().map_err(serde::de::Error::custom)?,
+            den.parse().map_err(serde::de::Error::custom)?,
+        )
+        .map_err(|e| serde::de::Error::custom(e.to_string()))
+    }
+}
+
+impl Serialize for FrameRange {
+    /// Canonical object form with start/end in declaration order.
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let mut st = s.serialize_struct("FrameRange", 2)?;
+        st.serialize_field("start", &self.start)?;
+        st.serialize_field("end", &self.end)?;
+        st.end()
+    }
+}
+
+impl<'de> Deserialize<'de> for FrameRange {
+    fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+        #[derive(serde::Deserialize)]
+        struct Raw {
+            start: i64,
+            end: i64,
+        }
+        let raw = Raw::deserialize(d)?;
+        FrameRange::new(raw.start, raw.end)
+            .map_err(|e| serde::de::Error::custom(e.to_string()))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

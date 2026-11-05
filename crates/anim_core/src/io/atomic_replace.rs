@@ -31,7 +31,63 @@ pub fn write_file_atomically(dest: &Path, payload: &[u8]) -> Result<(), CoreErro
     }
     #[cfg(not(windows))]
     {
-        replace_by_rename(dest, payload)
+        replace_by_rename(dest, payload).map(|_| ())
+    }
+}
+
+/// Result of a recovery-aware atomic save (spec 12.7): the backup path (when
+/// a previous destination existed) and any durability limitation found while
+/// flushing the DIRECTORY.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CommittedFile {
+    /// Old destination contents preserved by the replacement commit, when
+    /// the destination existed. Backups are immutable recovery inputs —
+    /// callers must NOT delete them (spec 12.7/12.8).
+    pub backup: Option<PathBuf>,
+    /// Set when the directory itself could NOT be flushed to stable media.
+    /// A durability limitation is a visible warning, never silent success
+    /// (spec 12.11).
+    pub durability_warning: Option<String>,
+}
+
+/// Write `payload` atomically to `dest` AND report recovery metadata.
+///
+/// Sequence (spec 12.7):
+///   1. temporary file beside the destination, created with create_new
+///   2. write all bytes, flush, sync_all
+///   3. destination exists → `ReplaceFileW` (REPLACEFILE_WRITE_THROUGH);
+///      no destination → `MoveFileExW(MOVEFILE_WRITE_THROUGH)`
+///   4. reopen-verify destination holds exactly the payload
+///   5. attempt directory flush; report unsupported durability explicitly
+pub fn write_file_atomically_reported(
+    dest: &Path,
+    payload: &[u8],
+) -> Result<CommittedFile, CoreError> {
+    #[cfg(windows)]
+    {
+        crate::io::windows::replace_file_reported(dest, payload)
+    }
+    #[cfg(not(windows))]
+    {
+        let backup = dest.exists().then(|| dest.to_path_buf());
+        replace_by_rename(dest, payload)?;
+        let durability_warning = flush_directory(dest).err().map(|e| e.to_string());
+        Ok(CommittedFile { backup, durability_warning })
+    }
+}
+
+/// Best-effort directory flush through a backup-semantics handle. Returns
+/// Err(text) when the platform does not support it — callers surface this
+/// as a durability warning (spec 12.7 "report unsupported durability").
+pub(crate) fn flush_directory(dest: &Path) -> Result<(), String> {
+    let _ = dest;
+    #[cfg(windows)]
+    {
+        crate::io::windows::flush_parent_directory(dest)
+    }
+    #[cfg(not(windows))]
+    {
+        Err("directory flush unsupported on this platform (filesystem may not be fully durable)".into())
     }
 }
 

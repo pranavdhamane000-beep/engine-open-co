@@ -37,6 +37,35 @@ impl Rational {
         self.den
     }
 
+    /// Exact ordering. BigInt intermediates (crate policy: never wrap),
+    /// sign-safe via the den > 0 invariant.
+    fn cmp_exact(&self, other: &Self) -> std::cmp::Ordering {
+        let l = BigInt::from(self.num) * BigInt::from(other.den);
+        let r = BigInt::from(other.num) * BigInt::from(self.den);
+        l.cmp(&r)
+    }
+}
+
+impl PartialOrd for Rational {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Rational {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.cmp_exact(other)
+    }
+}
+
+impl std::fmt::Display for Rational {
+    /// Canonical "num/den" — exactly the text `Deserialize` accepts.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}/{}", self.num, self.den)
+    }
+}
+
+impl Rational {
     pub fn is_zero(&self) -> bool {
         self.num == 0
     }

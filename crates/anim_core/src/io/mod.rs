@@ -6,4 +6,4 @@ pub mod atomic_replace;
 #[cfg(windows)]
 pub mod windows;
 
-pub use atomic_replace::write_file_atomically;
+pub use atomic_replace::{write_file_atomically, write_file_atomically_reported};

@@ -84,6 +84,22 @@ impl AssetManifestEntry {
         })
     }
 
+    /// Re-validate a (possibly deserialized) entry: dependencies strictly
+    /// sorted (implies no duplicates), no self-reference. Load paths must
+    /// run this because Deserialize bypasses the checked constructor.
+    pub fn validate(&self) -> AssetResult<()> {
+        if self.dependencies.windows(2).any(|w| w[0] >= w[1]) {
+            return Err(AssetError::DependencyCycle(format!(
+                "{}: dependency list not strictly sorted (or duplicated)",
+                self.asset_id
+            )));
+        }
+        if self.dependencies.contains(&self.asset_id) {
+            return Err(AssetError::DependencyCycle(self.asset_id.to_string()));
+        }
+        Ok(())
+    }
+
     /// Length-prefixed canonical field encoding, in declaration order
     /// (spec 11.7 manifest digest). NEVER changes without a schema bump.
     pub fn append_canonical(&self, out: &mut Vec<u8>) {
