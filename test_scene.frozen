@@ -1,0 +1,17 @@
+﻿1e5f0000-0000-4000-8000-000000000001
+2a5f0000-0000-4000-8000-00000000000a
+{
+  "scene_id": "TestA",
+  "title": "Test A — Full body",
+  "fps_num": 24,
+  "fps_den": 1,
+  "width": 1280,
+  "height": 720,
+  "duration_frames": 96,
+  "node_count": 4,
+  "track_count": 4,
+  "event_count": 2,
+  "resource_counts": {"meshes": 0, "bones": 4, "particles": 0, "lights": 0},
+  "image_tolerance": 2,
+  "pcm_tolerance": 0
+}

@@ -5,4 +5,16 @@
 #![deny(clippy::all)]
 #![allow(clippy::multiple_crate_versions)] // wgpu/egui ecosystem transitive dup minors; revisit WP11
 
+pub mod benchmark;
+pub mod determinism;
+pub mod faults;
+pub mod golden;
+pub mod gpu_memory;
 pub mod probe;
+pub mod scenes;
+
+pub use determinism::{RunArtifacts, RunConfig, TestError};
+pub use scenes::{
+    build, fixed_id, manifest_json, test_a_full_body, SceneBundle, SceneManifest,
+    TestSceneId,
+};

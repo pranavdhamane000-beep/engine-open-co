@@ -22,4 +22,9 @@ pub enum CoreError {
     /// in the message text.
     #[error("io: {0}")]
     Io(String),
+    /// WP05 addition (ADR-0009): configuration validation failure with a
+    /// descriptive message. Additive to the WP01 set; equality/Clone kept
+    /// for undo/diff tests.
+    #[error("validation: {0}")]
+    Validation(String),
 }

@@ -82,6 +82,15 @@ typed_id!(
     TrackId, "track"
 );
 typed_id!(
+    /// A spring edge between two simulation bodies (WP05).
+    SpringEdgeId, "springedge"
+);
+typed_id!(
+    /// One concrete occurrence of an event definition (WP04): derived ONCE
+    /// from (EventDefinitionId, occurrence_index) and never re-derived.
+    EventOccurrenceId, "eventocc"
+);
+typed_id!(
     /// A reference to an immutable asset (WP02 manifest).
     AssetId, "asset"
 );
@@ -89,6 +98,13 @@ typed_id!(
     /// A command in the undo history (WP04).
     CommandId, "command"
 );
+
+// From implementations for TrackId conversions
+impl From<EventDefinitionId> for TrackId {
+    fn from(id: EventDefinitionId) -> Self {
+        TrackId(id.0)
+    }
+}
 typed_id!(
     /// A named event definition (WP05 scene events).
     EventDefinitionId, "eventdef"

@@ -1,0 +1,23 @@
+1e5f0000-0000-4000-8000-000000000001
+2a5f0000-0000-4000-8000-00000000000c
+{
+  "scene_id": "TestC",
+  "title": "Test C — Weapon handling",
+  "fps_num": 24,
+  "fps_den": 1,
+  "width": 1280,
+  "height": 720,
+  "duration_frames": 64,
+  "node_count": 3,
+  "track_count": 3,
+  "event_count": 4,
+  "resource_counts": {
+    "meshes": 0,
+    "bones": 0,
+    "particles": 0,
+    "lights": 0
+  },
+  "image_tolerance": 2,
+  "pcm_tolerance": 0,
+  "content_note": "Prop asset, grip definitions, attachment, draw/swing markers. Content synthesis deferred to WP12+/WP13+ (attachment/socket systems). This manifest documents the ACCEPTANCE SHAPE per §20.13; hashes below are for the frozen metadata bundle only."
+}

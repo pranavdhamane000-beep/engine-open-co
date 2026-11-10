@@ -13,12 +13,15 @@ pub mod hash;
 pub mod id;
 pub mod io;
 pub mod rational;
+pub mod sim_config;
 pub mod time;
 
 pub use error::CoreError;
 pub use hash::{domain_hash, domain_hash_hex, Canonical};
 pub use id::{
-    AssetId, CommandId, EventDefinitionId, NodeId, ProjectId, Revision, SceneId, TrackId,
+    AssetId, CommandId, EventDefinitionId, EventOccurrenceId, NodeId, ProjectId, Revision,
+    SceneId, SpringEdgeId, TrackId,
 };
 pub use rational::Rational;
+pub use sim_config::{EmitterSettings, SimulationSettings, SpringEdge};
 pub use time::{FramePos, FrameRange, FrameRate, SampleInterval};

@@ -8,7 +8,7 @@
 use crate::scene::SceneData;
 use crate::{ProjectError, ProjectResult};
 use anim_assets::AssetManifest;
-use anim_core::{FrameRate, ProjectId, Revision, SceneId};
+use anim_core::{FrameRate, ProjectId, Revision, SceneId, SimulationSettings};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -25,6 +25,12 @@ pub struct ProjectDocument {
     pub assets: AssetManifest,
     /// Ordered by SceneId byte order (BTreeMap) for canonical serialization.
     pub scenes: BTreeMap<SceneId, SceneData>,
+    /// WP05 simulation settings (spec §14.2). `serde(default)` keeps
+    /// WP03-era documents loadable with validation-valid defaults
+    /// (ticks_per_frame = 1, zero seed — a DETERMINISTIC choice, used
+    /// exactly as authored; validation checks invariants, never replaces).
+    #[serde(default)]
+    pub simulation: SimulationSettings,
 }
 
 impl ProjectDocument {
@@ -38,6 +44,7 @@ impl ProjectDocument {
             frame_rate,
             assets: AssetManifest::new(),
             scenes: BTreeMap::new(),
+            simulation: SimulationSettings::default(),
         }
     }
 

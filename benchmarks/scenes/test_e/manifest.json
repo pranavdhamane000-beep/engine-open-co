@@ -1,0 +1,21 @@
+{
+  "scene_id": "TestE",
+  "title": "Test E — Cinematic production",
+  "fps_num": 24,
+  "fps_den": 1,
+  "width": 1280,
+  "height": 720,
+  "duration_frames": 240,
+  "node_count": 10,
+  "track_count": 10,
+  "event_count": 8,
+  "resource_counts": {
+    "meshes": 0,
+    "bones": 0,
+    "particles": 0,
+    "lights": 0
+  },
+  "image_tolerance": 2,
+  "pcm_tolerance": 0,
+  "content_note": "2.5D layers, camera moves, VFX, secondary motion, dialogue, final export. Content synthesis deferred to WP12+ (2.5D layers/camera/VFX/dialogue systems). This manifest documents the ACCEPTANCE SHAPE per §20.13; hashes below are for the frozen metadata bundle only."
+}

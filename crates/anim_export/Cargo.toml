@@ -6,3 +6,29 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
+anim_core = { path = "../anim_core" }
+anim_project = { path = "../anim_project" }
+anim_assets = { path = "../anim_assets" }
+anim_scene = { path = "../anim_scene" }
+anim_sim = { path = "../anim_sim" }
+anim_render = { path = "../anim_render" }
+anim_audio = { path = "../anim_audio" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+blake3.workspace = true
+wgpu.workspace = true
+pollster.workspace = true
+tokio.workspace = true
+which.workspace = true
+uuid.workspace = true
+
+[features]
+default = []
+preview-audio = ["anim_audio/preview-audio"]
+test-faults = ["anim_test_support/test-faults"]
+
+[dev-dependencies]
+tempfile.workspace = true
+anim_test_support = { path = "../anim_test_support" }

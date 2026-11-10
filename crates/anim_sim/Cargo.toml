@@ -6,3 +6,13 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
+anim_core = { path = "../anim_core" }
+anim_assets = { path = "../anim_assets" }
+anim_scene = { path = "../anim_scene" }
+anim_project = { path = "../anim_project" }
+thiserror.workspace = true
+num-bigint.workspace = true
+uuid.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

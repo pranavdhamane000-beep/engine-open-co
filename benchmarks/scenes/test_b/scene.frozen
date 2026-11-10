@@ -1,0 +1,23 @@
+1e5f0000-0000-4000-8000-000000000001
+2a5f0000-0000-4000-8000-00000000000b
+{
+  "scene_id": "TestB",
+  "title": "Test B — Hands and face",
+  "fps_num": 24,
+  "fps_den": 1,
+  "width": 1280,
+  "height": 720,
+  "duration_frames": 72,
+  "node_count": 6,
+  "track_count": 8,
+  "event_count": 3,
+  "resource_counts": {
+    "meshes": 0,
+    "bones": 0,
+    "particles": 0,
+    "lights": 0
+  },
+  "image_tolerance": 2,
+  "pcm_tolerance": 0,
+  "content_note": "Finger pose, expression/viseme tracks, close-up drawing override at exact frames. Content synthesis deferred to WP13+ (hand/face/viseme systems). This manifest documents the ACCEPTANCE SHAPE per §20.13; hashes below are for the frozen metadata bundle only."
+}

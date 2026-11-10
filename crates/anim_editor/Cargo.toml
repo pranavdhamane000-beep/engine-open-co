@@ -6,3 +6,19 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
+anim_core = { path = "../anim_core" }
+anim_project = { path = "../anim_project" }
+anim_commands = { path = "../anim_commands" }
+anim_audio = { path = "../anim_audio" }
+anim_export = { path = "../anim_export" }
+thiserror.workspace = true
+uuid.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+anim_core = { path = "../anim_core" }
+anim_project = { path = "../anim_project" }
+anim_commands = { path = "../anim_commands" }
+anim_export = { path = "../anim_export" }
+serde_json.workspace = true

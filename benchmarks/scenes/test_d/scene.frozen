@@ -1,0 +1,23 @@
+1e5f0000-0000-4000-8000-000000000001
+2a5f0000-0000-4000-8000-00000000000d
+{
+  "scene_id": "TestD",
+  "title": "Test D — Coordinated fight",
+  "fps_num": 24,
+  "fps_den": 1,
+  "width": 1280,
+  "height": 720,
+  "duration_frames": 144,
+  "node_count": 8,
+  "track_count": 8,
+  "event_count": 6,
+  "resource_counts": {
+    "meshes": 0,
+    "bones": 0,
+    "particles": 0,
+    "lights": 0
+  },
+  "image_tolerance": 2,
+  "pcm_tolerance": 0,
+  "content_note": "Two rigs, paired tracks, contact markers, reactions. Content synthesis deferred to WP12+ (multi-rig contact systems). This manifest documents the ACCEPTANCE SHAPE per §20.13; hashes below are for the frozen metadata bundle only."
+}

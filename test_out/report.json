@@ -1,0 +1,10 @@
+{
+  "cadence": 120,
+  "elapsed_us": 95,
+  "event_hash": "62cd8b0f8682503cb89e5760fdeac3d135f89990b83512bdc52dc4976ff349c2",
+  "frame_input_hash": "257c27dc1e1f08496968508ff5689ea4cb80d2c2dbc8475f54c3c47cf46dccd6",
+  "frames": 10,
+  "pcm_hash": "781bb0acf5d546d573e830a47ba6eb4c1d24bb45bb634aa00c6f48054ca45c49",
+  "peak_rss_bytes": 5517312,
+  "simulation_hash": "40b6aad88533c9460faba1045583cf1b779e62d2d2c10f048972c56a2d1241eb"
+}

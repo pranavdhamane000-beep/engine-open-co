@@ -14,6 +14,7 @@ members = [
     "crates/anim_app",
     "crates/anim_headless",
     "crates/anim_test_support",
+    "crates/anim_character",
 ]
 
 [workspace.package]
@@ -27,7 +28,7 @@ publish = false
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 ash = "0.38"
-windows = { version = "0.62", features = ["Win32_Graphics_Dxgi", "Win32_Graphics_Dxgi_Common", "Win32_Storage_FileSystem", "Win32_Foundation", "Win32_Security"] }
+windows = { version = "0.62", features = ["Win32_Graphics_Dxgi", "Win32_Graphics_Dxgi_Common", "Win32_Storage_FileSystem", "Win32_Foundation", "Win32_Security", "Win32_System_ProcessStatus", "Win32_System_Threading"] }
 thiserror = "2"
 anyhow = "1"
 uuid = { version = "1", features = ["v4", "serde"] }
@@ -56,6 +57,8 @@ proptest = "1"
 criterion = "0.5"
 tempfile = "3"
 pollster = "0.4"
+tokio = { version = "1", features = ["full"] }
+which = "6"
 
 [profile.release]
 lto = false

@@ -18,3 +18,14 @@ rubato.workspace = true
 symphonia.workspace = true
 blake3.workspace = true
 tempfile.workspace = true
+thiserror.workspace = true
+anim_render = { path = "../anim_render" }
+anim_core = { path = "../anim_core" }
+anim_assets = { path = "../anim_assets" }
+anim_project = { path = "../anim_project" }
+anim_scene = { path = "../anim_scene" }
+
+[features]
+# Deterministic fault-injection hooks (spec §20.4, §20.10). OFF by default;
+# verify_release.ps1 FAILS a release build that enables it.
+test-faults = []

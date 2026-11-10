@@ -21,7 +21,8 @@ pub use anim_assets::{
     resolve as resolve_asset, AssetKind, AssetManifest, AssetManifestEntry, ContentHash,
 };
 pub use anim_core::{
-    AssetId, FramePos, FrameRange, FrameRate, NodeId, ProjectId, Revision, SceneId, TrackId,
+    AssetId, EmitterSettings, FramePos, FrameRange, FrameRate, NodeId, ProjectId, Revision,
+    SceneId, SimulationSettings, SpringEdge, SpringEdgeId, TrackId,
 };
 
 pub use document::{ProjectDocument, PROJECT_SCHEMA_VERSION};
@@ -34,7 +35,9 @@ pub use save::{
     autosave_path_for, load_autosave, save_atomic, save_atomic_staged, save_autosave,
     SaveReport, SaveStage, AUTOSAVE_SUFFIX,
 };
-pub use scene::{NodeData, SceneData, SceneMarker, TrackData};
+pub use scene::{
+    EventDefinition, EventKind, MarkerKind, NodeData, SceneData, SceneMarker, TrackData,
+};
 pub use schema::{
     canonical_json, document_hash, load_document, parse_document, validate_document,
 };

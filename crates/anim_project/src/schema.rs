@@ -18,6 +18,11 @@ pub fn validate_document(doc: &ProjectDocument) -> Result<(), ProjectError> {
     let rate = anim_core::FrameRate::new(doc.frame_rate.num, doc.frame_rate.den)?;
     let _ = rate;
 
+    // Simulation settings invariants (WP05 §14.2).
+    doc.simulation
+        .validate()
+        .map_err(|e| ProjectError::Validation(format!("simulation settings: {e}")))?;
+
     // Manifest entry invariants (Deserialize bypasses the checked ctor).
     for entry in doc.assets.records.values() {
         entry.validate().map_err(|e| ProjectError::Validation(format!("manifest: {e}")))?;
@@ -32,6 +37,8 @@ pub fn validate_document(doc: &ProjectDocument) -> Result<(), ProjectError> {
             return Err(ProjectError::Validation("scene id must not be nil".into()));
         }
         scene.validate_node_parents()?;
+        scene.validate_event_definitions(&doc.assets)?;
+        scene.validate_simulation_inputs()?;
         for (node_id, node) in &scene.nodes {
             if node_id.0.is_nil() {
                 return Err(ProjectError::Validation("node id must not be nil".into()));

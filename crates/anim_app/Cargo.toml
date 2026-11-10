@@ -8,3 +8,15 @@ publish.workspace = true
 [dependencies]
 wgpu.workspace = true
 pollster.workspace = true
+anim_render = { path = "../anim_render" }
+anim_core = { path = "../anim_core" }
+anim_project = { path = "../anim_project" }
+anim_commands = { path = "../anim_commands" }
+anim_editor = { path = "../anim_editor" }
+winit.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+windows = { workspace = true, features = ["Win32_UI_Input_Pointer", "Win32_UI_WindowsAndMessaging"] }

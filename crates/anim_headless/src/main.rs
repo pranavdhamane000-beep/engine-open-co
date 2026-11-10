@@ -1,4 +1,12 @@
+mod cli;
+use clap::Parser;
+
 fn main() {
-    // Spec 9.3: executable entry-point stub - real logic arrives at WP09/WP10.
-    println!("anim_headless: entry-point stub (WP00 scaffold)");
+    match cli::Cli::parse().run() {
+        Ok(()) => {}
+        Err(e) => {
+            eprintln!("Error: {}", e);
+            std::process::exit(1);
+        }
+    }
 }

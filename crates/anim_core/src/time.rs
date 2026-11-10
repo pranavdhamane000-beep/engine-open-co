@@ -131,7 +131,11 @@ fn floor_bigint_i64(n: &BigInt, d: i128) -> Result<i64, CoreError> {
 /// `subframe ∈ [0,1)`; overflow carries into the frame. Invariants require
 /// normalization, so fields are private and construction goes through
 /// `FramePos::new`.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+/// WP04 addition (ADR-0008): `PartialOrd`/`Ord` over (frame, subframe) —
+/// the canonical event sort key needs exact FramePos ordering; rational
+/// field ordering makes the derived ordering mathematically correct
+/// (frame-major, then exact subframe).
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FramePos {
     frame: i64,
     subframe: Rational,
